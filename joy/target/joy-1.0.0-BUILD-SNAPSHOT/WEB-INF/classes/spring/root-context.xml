@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+   		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+   		<!-- <property name="url" value="jdbc:mysql://zzals2215.cafe24.com:3306/zzals2215" /> -->
+   		<property name="url" value="jdbc:mysql://localhost:3306/zzals2215" />
+   		<property name="username" value="zzals2215" />
+   		<property name="password" value="seongeun01" />
+	</bean> 
+	
+	<!-- transaction manager-->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+	    p:dataSource-ref="dataSource" />
+	 
+		
+</beans>

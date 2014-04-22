@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.se.joy.service.mapper.WordMapper">
+	
+<!-- 	<select id="getWordDomain" parameterType="hashmap" resultType="memberVO" >
+		SELECT USR_ID, USR_PW, USR_NM, USR_TYPE, AUTH 
+		FROM TB_USER
+ 			WHERE  AUTH = 9
+ 			AND USR_ID = #{adminId}
+			AND USR_PW = #{adminPwd}
+	</select>
+	 -->
+	<select id="getWords" parameterType="hashmap" resultType="wordsVO" >
+		SELECT idx, spelling, meaning1, meaning2, meaning3, similar1, similar2, stage, step, state
+		FROM words
+		where stage = #{stage}
+		and step = #{step}
+	</select>
+	
+	<select id="wordCheck" parameterType="hashmap" resultType="hashmap" >
+		SELECT idx, spelling, meaning1, meaning2, meaning3, similar1, similar2, step, state
+		FROM words
+		WHERE idx = #{idx} AND meaning1 = #{meaning} 
+	</select>
+	
+	
+	
+	<select id="testCnt" parameterType="hashmap" resultType="hashmap" >
+		SELECT m_idx, COUNT(m_idx) cnt FROM record
+		WHERE m_idx = #{m_idx} AND DATE_FORMAT(test_dt,'%y%m%d') = DATE_FORMAT(NOW(),'%y%m%d') 
+		GROUP BY m_idx, DATE_FORMAT(test_dt,'%y%m%d')
+	</select>
+	
+	<insert id="insertRecord" parameterType="hashmap">
+		insert into record
+		(
+			m_idx,
+			point,
+			stage,
+			step,
+			test_dt
+		)
+		 values
+		(
+			#{m_idx},
+			#{point},
+			#{stage},
+			#{step},
+			NOW()
+		)
+		<selectKey resultType="int" keyProperty="UID" order="AFTER">
+			select last_insert_id();
+		</selectKey>
+	</insert>
+	
+	<insert id="insertImageInfo" parameterType="hashmap">
+		INSERT INTO TB_ATTACH
+		(
+		       FID
+		       ,FILE_NM
+		       ,ORI_FILE_NM
+		       ,SIZE
+		       ,CRE_DATE
+		)
+		VALUES
+		(
+				#{fid}
+		       ,#{fileNm}
+		       ,#{oriNm}
+		       ,#{size}
+		       ,NOW()
+		)
+	</insert>
+	
+	<update id="studentsUpdate" parameterType="hashmap">
+		update TB_USER set
+			USR_ID = #{usrId},
+			<if test="usrPw != null">
+			USR_PW = #{usrPw},
+			</if>
+			USR_NM = #{usrNm},
+			USR_MAIL = #{usrMail},
+			OFF_TEL = #{offTel},
+			TEL = #{tel},
+			FAX = #{fax},
+			ADDR = #{addr},
+			EN_NM = #{enNm},
+			USR_TYPE = #{type},
+			AUTH = ${auth}
+		where UID = #{uid}			
+	</update>
+	
+	<update id="studentDelete" parameterType="hashmap">
+		update TB_USER set
+			state = 3
+		where UID = #{uid}			
+	</update>
+	
+	
+	<insert id="postInsert" parameterType="hashmap">
+		insert into common_board (
+			title,
+			content,
+			column1,
+			column2,
+			column3,
+			type,
+			cre_dt
+		)
+		values
+		(
+			#{title},
+			#{content},
+			#{column1},
+			#{column2},
+			#{column3},
+			#{type},
+			NOW()
+		)
+		
+	</insert>
+	
+	<update id="postModify" parameterType="hashmap">
+		update common_board set 
+			title = #{title},
+			content = #{content},
+			column1 = #{column1},
+			column2 = #{column2},
+			type = #{type},
+			mod_dt = NOW()
+		where idx = #{idx}			
+	</update>
+	
+	<update id="postDelete" parameterType="hashmap">
+		update common_board set 
+			status = 3
+		where idx = #{idx}			
+	</update>
+	
+	<select id="getBoardList" parameterType="hashmap" resultType="hashmap">
+		SELECT idx, title, column1, column2, column3, column4, type, status FROM common_board
+		WHERE status = 1
+		<if test="type != ''">
+		AND type = #{type}
+		</if>
+		ORDER BY cre_dt DESC
+		<if test="listCnt != null">
+		LIMIT ${start}, ${listCnt}
+		</if>
+	</select>
+	
+	<select id="getBoardTotalCnt" parameterType="hashmap" resultType="int" >
+		SELECT COUNT(*) FROM common_board
+		WHERE status = 1
+		<if test="type != ''">
+		AND type = #{type}
+		</if>
+	</select>
+	
+	<select id="getBoardDetail" parameterType="hashmap" resultType="hashmap" >
+		SELECT * FROM common_board
+		WHERE idx = #{idx}
+	</select>
+	
+	<select id="getAdminBoardList" parameterType="hashmap" resultType="hashmap">
+		SELECT idx, title, type FROM common_board
+		WHERE status = 1
+		<if test="type != ''">
+		AND type = #{type}
+		</if>
+		ORDER BY cre_dt DESC
+		LIMIT ${start}, ${listCnt}
+	</select>
+	
+	<select id="getBoardCdList" parameterType="hashmap" resultType="hashmap">
+		SELECT code_cd, parent_cd, name, sort, depth FROM codes
+		WHERE parent_cd = #{code}
+	</select>
+	
+	<delete id="deleteFile" parameterType="hashmap">
+		DELETE FROM TB_ATTACH WHERE FID = #{uid}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.se.joy.service.mapper.AdminMapper">
+	
+	<select id="getAdminInfo" parameterType="hashmap" resultType="memberVO" >
+		SELECT *
+		FROM member
+ 			WHERE auth = 9
+ 			AND m_id = #{adminId}
+			AND m_pwd = #{adminPwd}
+	</select>
+	
+	<insert id="codeInsert" parameterType="codeVo">
+		insert into codes (
+			code,
+			parent_cd,
+			code_nm,
+			depth,
+			sort,
+			create_dt
+		) values (
+			#{code},
+			#{parent_cd},
+			#{code_nm},
+			#{depth},
+			#{sort},
+			now()
+		)
+	</insert>
+	
+	<select id="getWordList" parameterType="hashmap" resultType="wordsVO" >
+		SELECT idx, spelling, meaning1, meaning2, meaning3, similar1, similar2, stage, step, state
+		FROM words
+		where 1=1
+		<if test="stage != null and stage != ''">
+			and stage = #{stage}
+		</if>
+		<if test="step != null and step != ''">
+			and step = #{step}
+		</if>
+		ORDER BY idx 
+		LIMIT ${startNum}, ${endNum}
+	</select>
+	
+	<select id="getWordTotCnt" parameterType="hashmap" resultType="int" >
+		SELECT COUNT(*)
+		FROM words
+		where 1=1
+		<if test="stage != null and stage != ''">
+			and stage = #{stage}
+		</if>
+		<if test="step != null and step != ''">
+			and step = #{step}
+		</if>
+	</select>
+	
+	<select id="getWordDetail" parameterType="hashmap" resultType="wordsVO" >
+		SELECT idx, spelling, meaning1, meaning2, meaning3, similar1, similar2, stage, step, state
+		FROM words
+		WHERE idx = #{idx}
+	</select>
+	
+	<update id="wordUpdate" parameterType="hashmap">
+		update words set 
+			spelling = #{spelling},
+			meaning1 = #{meaning1},
+			meaning2 = #{meaning2},
+			meaning3 = #{meaning3},
+			similar1 = #{similar1},
+			similar2 = #{similar2},
+			stage = #{stage},
+			step = #{step}
+		where idx = #{idx}
+	</update>
+	
+	<insert id="memberInsert" parameterType="HashMap">
+		insert into member (
+			m_id,
+			m_nm,
+			m_pwd,
+			birth,
+			mail,
+			mobile,
+			parent_tel,
+			school_grade_cd,
+			school_cd,
+			grade,
+			create_dt
+		) values (
+			#{mId},
+			#{mNm},
+			#{mPwd},
+			#{birth},
+			#{mail},
+			#{mobile},
+			#{parentTel},
+			#{schoolGradeCd},
+			#{schoolCd},
+			#{grade},
+			now()
+		)
+	</insert>
+	
+</mapper>

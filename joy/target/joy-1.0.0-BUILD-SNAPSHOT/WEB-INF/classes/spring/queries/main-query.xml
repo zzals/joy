@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.se.joy.service.mapper.MainMapper">
+	
+
+	<select id="getCodeList" parameterType="hashmap" resultType="codeVO" >
+		SELECT code, parent_cd, code_nm, depth, sort, state
+		FROM codes
+		ORDER BY code
+	</select>
+	
+	
+	<select id="getMemberInfo" parameterType="hashmap" resultType="memberVO" >
+		SELECT * FROM member 		
+			WHERE auth in (1,9) 
+			AND m_id = #{mId}
+			AND m_pwd = #{mPwd}
+	</select>
+	
+	<select id="getWordStep" parameterType="hashmap" resultType="hashmap">
+		SELECT step FROM words
+		WHERE stage = #{code}
+		GROUP BY step
+		ORDER BY step
+	</select>
+	
+</mapper>
