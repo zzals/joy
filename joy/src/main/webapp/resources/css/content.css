@@ -145,3 +145,8 @@ ul.navi li a {font-weight:bold; font-size:1.2em; color:#657eea;}
 #adminContent {margin:30px 10px 30px 170px;}
 .searchBox {text-align:right;}
 p.testGo a {font-size:3em; font-weight:bold; color:#cb593b;}
+
+@media all and (max-width:800px) {
+	#footer {position:fixed; left:0; bottom:0px; height:60px; width:100%; line-height:60px; background:#fff;
+		border-top:1px solid #d5d5d5; color:#aaa; font-size:2em;}
+}
